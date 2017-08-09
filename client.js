@@ -1,9 +1,13 @@
 const urlJoin = require('url-join');
+const endOfToday = require('date-fns/end_of_today');
+const addDays = require('date-fns/add_days');
+const isWithinRange = require('date-fns/is_within_range');
 const r = require('./lib/request');
 const { samlRequest, samlResponse } = require('./lib/saml');
-const { getUserInfo, getRecipes } = require('./lib/scraper');
+const { getUserInfo, getRecipes, getRecipeDetails } = require('./lib/scraper');
 
 const filter = (col, fn) => [].filter.call(col, fn);
+const validate = data => Object.keys(data).length !== 0;
 
 class Client {
   constructor() {
@@ -18,11 +22,15 @@ class Client {
     };
 
     const url = urlJoin(this.baseUrl, '/isspaaieduhr/login.ashx');
-    return initLogin(url)
+    return initAuthAction(url)
       .then(html => samlRequest(r, html))
       .then(data => doLogin(data.url, credentials, data.authState))
       .then(html => samlResponse(r, html))
       .then(({ data, html }) => {
+        if (!validate(data)) {
+          const err = new Error('Logging in failed');
+          return Promise.reject(err);
+        }
         const user = parseUserInfo(data);
         Object.assign(this.user, getUserInfo(html), user);
         return this;
@@ -43,13 +51,19 @@ class Client {
     const url = urlJoin(this.baseUrl, '/StudentRacun/RacunDetalji');
     const options = { json: recipe.id };
     return r.post(url, options)
-      .then(([, html]) => html);
+      .then(([, html]) => getRecipeDetails(html));
+  }
+
+  logout() {
+    const url = urlJoin(this.baseUrl, '/KorisnickiRacun/Odjava');
+    return initAuthAction(url)
+      .then(html => samlRequest(r, html));
   }
 }
 
 module.exports = Client;
 
-function initLogin(url) {
+function initAuthAction(url) {
   return r.get(url)
     .then(([, html]) => html);
 }
@@ -79,8 +93,6 @@ function parseUserInfo(data) {
   };
 }
 
-// TODO: implement midnight check
 function limitDate(date, dayLimit) {
-  // return (new Date()).getTime() - (dayLimit * (86400000)) < date;
-  return ((new Date()) - date) / 86400000 < dayLimit;
+  return isWithinRange(date, addDays(endOfToday(), -dayLimit), endOfToday());
 }

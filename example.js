@@ -9,4 +9,5 @@ client.login(credentials.username, credentials.password)
     console.log(recipes);
     return client.getRecipeDetails(recipes[0]);
   })
-  .then(html => console.log(html));
+  .then(html => console.log(html))
+  .then(() => client.logout());
