@@ -1,5 +1,4 @@
 # srce-issp-client
-[![npm version](https://img.shields.io/npm/v/react.svg?style=flat)](https://www.npmjs.com/package/srce-issp-client)
 
 > Client for accessing Student information on [ISSP](http://issp.srce.hr).
 
