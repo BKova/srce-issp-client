@@ -24,7 +24,7 @@ client.login('AAI@Edu username', 'AAI@Edu password');
 * Get all recipes that are not older that `maxRecipeAgeInDays` days. 
 * Promise returns recipes array.
 ```js
-client.getRecipes(365));
+client.getRecipes(365);
 ```
 ##### Client.getRecipeDetails [Method] (recipe: object) => Promise<Object>
 * Get details of `recipe`.
