@@ -4,47 +4,39 @@
 
 ## Install 
 
-```
+```bash
 $ npm install BKova/srce-issp-client
 ```
 Note: Currently there is no NPM package officialy released.
 
 ## Usage
-```
-Example:
+```js
 const isspClient = require('srce-issp-client');
 const client = new isspClient();
 ```
-#### Login
-##### Client.login [Method] (username: string, password: string) => Promise
+##### Client.login [Method] (username: string, password: string) => Promise<Client>
 * Use to login client. On authentication fail error is thrown. 
 * Promise returns client object and appends user info to client.user.
+```js
+client.login('AAI@Edu username', 'AAI@Edu password');
 ```
-const  loginPromise = client.login('AAI@Edu username', 'AAI@Edu password');
-```
-#### GetRecipes
-##### Client.getRecipes [Method] (maxRecipeAgeInDays: number) => Promise
+##### Client.getRecipes [Method] (maxRecipeAgeInDays: number) => Promise<Array>
 * Get all recipes that are not older that `maxRecipeAgeInDays` days. 
 * Promise returns recipes array.
+```js
+client.getRecipes(365));
 ```
-const recipesPromise = loginPromise
-  .then(client => client.getRecipes(365));
-```
-#### GetRecipeDetails
-##### Client.getRecipeDetails [Method] (recipe: object) => Promise
+##### Client.getRecipeDetails [Method] (recipe: object) => Promise<Object>
 * Get details of `recipe`.
 * Promise returns recipe details object.
+```js
+client.getRecipeDetails(recipe);
 ```
-const recipeDetailsPromise = recipesPromise
-  .then(recipes => client.getRecipeDetails(recipes[0]));
-```
-#### Logout
 ##### Client.logout [Method] () => Promise
 * Perform logout action.
 * Promise returns nothing.
-```
-recipeDetailsPromise
-  .then(() => client.logout());
+```js
+client.logout());
 ```
 ## License
 MIT © Bartul Kovacic
