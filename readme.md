@@ -1,4 +1,5 @@
 # srce-issp-client
+[![npm version](https://img.shields.io/npm/v/react.svg?style=flat)](https://www.npmjs.com/package/srce-issp-client)
 
 > Client for accessing Student information on [ISSP](http://issp.srce.hr).
 
@@ -12,25 +13,25 @@ $ npm install srce-issp-client
 const isspClient = require('srce-issp-client');
 const client = new isspClient();
 ```
-##### Client.login [Method] (username: string, password: string) => Promise<Client>
+##### Client#login(username: string, password: string) => Promise<Client>
 * Use to login client. On authentication fail error is thrown. 
 * Promise returns client object and appends user info to client.user.
 ```js
 client.login('AAI@Edu username', 'AAI@Edu password');
 ```
-##### Client.getRecipes [Method] (maxRecipeAgeInDays: number) => Promise<Array>
+##### Client#getRecipes(maxRecipeAgeInDays: number) => Promise<Array>
 * Get all recipes that are not older that `maxRecipeAgeInDays` days. 
 * Promise returns recipes array.
 ```js
 client.getRecipes(365);
 ```
-##### Client.getRecipeDetails [Method] (recipe: object) => Promise<Object>
+##### Client#getRecipeDetails(recipe: object) => Promise<Object>
 * Get details of `recipe`.
 * Promise returns recipe details object.
 ```js
 client.getRecipeDetails(recipe);
 ```
-##### Client.logout [Method] () => Promise
+##### Client#logout() => Promise
 * Perform logout action.
 * Promise returns nothing.
 ```js
