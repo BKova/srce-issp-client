@@ -5,10 +5,8 @@
 ## Install 
 
 ```bash
-$ npm install BKova/srce-issp-client
+$ npm install srce-issp-client
 ```
-Note: Currently there is no NPM package officialy released.
-
 ## Usage
 ```js
 const isspClient = require('srce-issp-client');
