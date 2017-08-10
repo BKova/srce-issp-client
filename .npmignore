@@ -5,5 +5,6 @@
 .npmignore
 .eslintrc.json
 credentials.json.example
+credentials.json
 example.js
 readme.md
