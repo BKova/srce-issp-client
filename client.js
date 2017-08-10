@@ -1,8 +1,6 @@
 const urlJoin = require('url-join');
 const endOfToday = require('date-fns/end_of_today');
 const addDays = require('date-fns/add_days');
-const debugClient = require('debug')('client');
-const debugHttp = require('debug')('http');
 const isWithinRange = require('date-fns/is_within_range');
 const r = require('./lib/request');
 const { samlRequest, samlResponse } = require('./lib/saml');
@@ -10,6 +8,7 @@ const { getUserInfo, getRecipes, getRecipeDetails } = require('./lib/scraper');
 
 const filter = (col, fn) => [].filter.call(col, fn);
 const validate = data => Object.keys(data).length !== 0;
+const debug = (namespace, ...args) => require('debug')(namespace)(...args);
 
 class Client {
   constructor() {
@@ -22,7 +21,7 @@ class Client {
       username,
       password,
     };
-    debugClient('Started login');
+    debug('client', 'Started login');
     const url = urlJoin(this.baseUrl, '/isspaaieduhr/login.ashx');
     return initAuthAction(url)
       .then(html => samlRequest(r, html))
@@ -35,45 +34,45 @@ class Client {
         }
         const user = parseUserInfo(data);
         Object.assign(this.user, getUserInfo(html), user);
-        debugClient('Finished login');
+        debug('client', 'Finished login');
         return this;
       });
   }
 
   getRecipes(dayLimit) {
-    debugClient('Getting all recipes');
+    debug('client', 'Getting all recipes');
     const url = urlJoin(this.baseUrl, '/StudentRacun');
     const options = {
       qs: { oib: this.user.oib, jmbag: this.user.jmbag },
     };
-    debugHttp('GET %o', url);
+    debug('http', 'GET %s', url);
     return r.get(url, options)
       .then(([, html]) => getRecipes(html))
       .then(recipes => filter(recipes, recipe => limitDate(recipe.time, dayLimit)));
   }
 
   getRecipeDetails(recipe) {
-    debugClient('Getting recipe %o', recipe.id);
+    debug('client', 'Getting recipe %o', recipe.id);
     const url = urlJoin(this.baseUrl, '/StudentRacun/RacunDetalji');
     const options = { json: recipe.id };
-    debugHttp('POST %o', url);
+    debug('http', 'POST %s', url);
     return r.post(url, options)
       .then(([, html]) => getRecipeDetails(html));
   }
 
   logout() {
     const url = urlJoin(this.baseUrl, '/KorisnickiRacun/Odjava');
-    debugClient('Started logout');
+    debug('client', 'Started logout');
     return initAuthAction(url)
       .then(html => samlRequest(r, html))
-      .then(() => debugClient('Finished logout'));
+      .then(() => debug('client', 'Finished logout'));
   }
 }
 
 module.exports = Client;
 
 function initAuthAction(url) {
-  debugHttp('GET %o', url);
+  debug('http', 'GET %s', url);
   return r.get(url)
     .then(([, html]) => html);
 }
@@ -87,7 +86,7 @@ function doLogin(url, credentials, authState) {
       AuthState: authState,
     },
   };
-  debugHttp('POST %o', url);
+  debug('http', 'POST %s', url);
   return r.post(url, options)
     .then(([, html]) => html);
 }

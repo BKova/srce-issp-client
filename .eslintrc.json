@@ -13,8 +13,11 @@
     ],
     "class-methods-use-this": [
       0
+    ],
+    "global-require": [
+      0
     ]
-  },
+    },
   "parserOptions": {
     "ecmaFeatures": {
       "modules": true
