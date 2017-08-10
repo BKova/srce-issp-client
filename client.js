@@ -48,7 +48,7 @@ class Client {
     debug('http', 'GET %s', url);
     return r.get(url, options)
       .then(([, html]) => getRecipes(html))
-      .then(recipes => filter(recipes, recipe => limitDate(recipe.time, dayLimit)));
+      .then(recipes => limitDate(recipes, dayLimit));
   }
 
   getRecipeDetails(recipe) {
@@ -103,6 +103,8 @@ function parseUserInfo(data) {
   };
 }
 
-function limitDate(date, dayLimit) {
-  return isWithinRange(date, addDays(endOfToday(), -dayLimit), endOfToday());
+function limitDate(recipes, dayLimit) {
+  return filter(recipes, recipe =>
+    isWithinRange(recipe.time, addDays(endOfToday(), -dayLimit), endOfToday()),
+  );
 }

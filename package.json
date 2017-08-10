@@ -1,13 +1,17 @@
 {
-  "name": "carnetmenzascraper",
-  "version": "0.1.0",
-  "description": "",
+  "name": "srce-issp-client",
+  "version": "1.0.0",
+  "description": "Client for accessing ISSP Student information: https://issp.srce.hr/",
   "main": "client.js",
+  "repository": "BKova/srce-issp-client",
   "scripts": {
-    "test": "node example.js"
+    "test": "node example.js",
+    "debug": "DEBUG=* node example.js > /dev/null",
+    "debug_http": "DEBUG=http node example.js > /dev/null",
+    "debug_client": "DEBUG=client node example.js > /dev/null",
+    "debug_saml": "DEBUG=saml node example.js > /dev/null"
   },
   "dependencies": {
-    "cheerio": "^1.0.0-rc.2",
     "date-fns": "^1.28.5",
     "debug": "^3.0.0",
     "fecha": "^2.3.1",
@@ -17,8 +21,11 @@
     "request": "^2.81.0",
     "url-join": "^2.0.2"
   },
-  "author": "Bartul Kovačić",
-  "license": "ISC",
+  "author": {
+    "name": "Bartul Kovacic",
+    "email": "bartul3.kovacic3@gmail.com"
+  },
+  "license": "MIT",
   "devDependencies": {
     "eslint": "^4.4.0",
     "eslint-config-airbnb": "^15.1.0",
