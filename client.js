@@ -4,7 +4,7 @@ const addDays = require('date-fns/add_days');
 const isWithinRange = require('date-fns/is_within_range');
 const r = require('./lib/request');
 const { samlRequest, samlResponse } = require('./lib/saml');
-const { getUserInfo, getRecipes, getRecipeDetails } = require('./lib/scraper');
+const { parseUserInfoHtml, parseRecipesHtml, parseRecipeDetailsHtml } = require('./lib/scraper');
 
 const filter = (col, fn) => [].filter.call(col, fn);
 const validate = data => Object.keys(data).length !== 0;
@@ -33,7 +33,7 @@ class Client {
           return Promise.reject(err);
         }
         const user = parseUserInfo(data);
-        Object.assign(this.user, getUserInfo(html), user);
+        Object.assign(this.user, parseUserInfoHtml(html), user);
         debug('client', 'Finished login');
         return this;
       });
@@ -47,7 +47,7 @@ class Client {
     };
     debug('http', 'GET %s', url);
     return r.get(url, options)
-      .then(([, html]) => getRecipes(html))
+      .then(([, html]) => parseRecipesHtml(html))
       .then(recipes => limitDate(recipes, dayLimit));
   }
 
@@ -57,7 +57,7 @@ class Client {
     const options = { json: recipe.id };
     debug('http', 'POST %s', url);
     return r.post(url, options)
-      .then(([, html]) => getRecipeDetails(html));
+      .then(([, html]) => Object.assign({}, recipe, { items: parseRecipeDetailsHtml(html) }));
   }
 
   logout() {
