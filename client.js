@@ -4,7 +4,7 @@ const addDays = require('date-fns/add_days');
 const isWithinRange = require('date-fns/is_within_range');
 const r = require('./lib/request');
 const { samlRequest, samlResponse } = require('./lib/saml');
-const { parseUserInfoHtml, parseRecipesHtml, parseRecipeDetailsHtml } = require('./lib/scraper');
+const { parseUserInfoHtml, parseReceiptsHtml, parseReceiptDetailsHtml } = require('./lib/scraper');
 
 const filter = (col, fn) => [].filter.call(col, fn);
 const validate = data => Object.keys(data).length !== 0;
@@ -39,25 +39,25 @@ class Client {
       });
   }
 
-  getRecipes(dayLimit) {
-    debug('client', 'Getting all recipes');
+  getReceipts(dayLimit) {
+    debug('client', 'Getting all receipts');
     const url = urlJoin(this.baseUrl, '/StudentRacun');
     const options = {
       qs: { oib: this.user.oib, jmbag: this.user.jmbag },
     };
     debug('http', 'GET %s', url);
     return r.get(url, options)
-      .then(([, html]) => parseRecipesHtml(html))
-      .then(recipes => limitDate(recipes, dayLimit));
+      .then(([, html]) => parseReceiptsHtml(html))
+      .then(receipts => limitDate(receipts, dayLimit));
   }
 
-  getRecipeDetails(recipe) {
-    debug('client', 'Getting recipe %o', recipe.id);
+  getReceiptDetails(receipt) {
+    debug('client', 'Getting receipt %o', receipt.id);
     const url = urlJoin(this.baseUrl, '/StudentRacun/RacunDetalji');
-    const options = { json: recipe.id };
+    const options = { json: receipt.id };
     debug('http', 'POST %s', url);
     return r.post(url, options)
-      .then(([, html]) => Object.assign({}, recipe, { items: parseRecipeDetailsHtml(html) }));
+      .then(([, html]) => Object.assign({}, receipt, { items: parseReceiptDetailsHtml(html) }));
   }
 
   logout() {
@@ -103,8 +103,8 @@ function parseUserInfo(data) {
   };
 }
 
-function limitDate(recipes, dayLimit) {
-  return filter(recipes, recipe =>
-    isWithinRange(recipe.time, addDays(endOfToday(), -dayLimit), endOfToday()),
+function limitDate(receipts, dayLimit) {
+  return filter(receipts, receipt =>
+    isWithinRange(receipt.time, addDays(endOfToday(), -dayLimit), endOfToday()),
   );
 }

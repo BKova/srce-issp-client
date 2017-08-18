@@ -1,6 +1,6 @@
 {
   "name": "srce-issp-client",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Client for accessing ISSP Student information: https://issp.srce.hr/",
   "main": "client.js",
   "repository": "BKova/srce-issp-client",

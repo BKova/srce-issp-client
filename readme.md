@@ -18,17 +18,17 @@ const client = new isspClient();
 ```js
 client.login('AAI@Edu username', 'AAI@Edu password');
 ```
-##### Client#getRecipes(maxRecipeAgeInDays: number) => Promise<Array>
-* Get all recipes that are not older that `maxRecipeAgeInDays` days. 
-* Promise returns recipes array.
+##### Client#getReceipts(maxReceiptAgeInDays: number) => Promise<Array>
+* Get all receipts that are not older that `maxReceiptAgeInDays` days. 
+* Promise returns receipts array.
 ```js
-client.getRecipes(365);
+client.getReceipts(365);
 ```
-##### Client#getRecipeDetails(recipe: object) => Promise<Object>
-* Get details of `recipe`.
-* Promise returns recipe details object.
+##### Client#getReceiptDetails(receipt: object) => Promise<Object>
+* Get details of `receipt`.
+* Promise returns receipt details object.
 ```js
-client.getRecipeDetails(recipe);
+client.getReceiptDetails(receipt);
 ```
 ##### Client#logout() => Promise
 * Perform logout action.
