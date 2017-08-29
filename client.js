@@ -43,10 +43,11 @@ class Client {
     debug('client', 'Getting all receipts');
     const url = urlJoin(this.baseUrl, '/StudentRacun');
     const options = {
+      url,
       qs: { oib: this.user.oib, jmbag: this.user.jmbag },
     };
     debug('http', 'GET %s', url);
-    return r.get(url, options)
+    return r.get(options)
       .then(([, html]) => parseReceiptsHtml(html))
       .then(receipts => limitDate(receipts, dayLimit));
   }
@@ -54,9 +55,9 @@ class Client {
   getReceiptDetails(receipt) {
     debug('client', 'Getting receipt %o', receipt.id);
     const url = urlJoin(this.baseUrl, '/StudentRacun/RacunDetalji');
-    const options = { json: receipt.id };
+    const options = { url, body: JSON.stringify(receipt.id) };
     debug('http', 'POST %s', url);
-    return r.post(url, options)
+    return r.post(options)
       .then(([, html]) => Object.assign({}, receipt, { items: parseReceiptDetailsHtml(html) }));
   }
 
@@ -79,6 +80,7 @@ function initAuthAction(url) {
 
 function doLogin(url, credentials, authState) {
   const options = {
+    url,
     form: {
       username: credentials.username,
       password: credentials.password,
@@ -87,7 +89,7 @@ function doLogin(url, credentials, authState) {
     },
   };
   debug('http', 'POST %s', url);
-  return r.post(url, options)
+  return r.post(options)
     .then(([, html]) => html);
 }
 

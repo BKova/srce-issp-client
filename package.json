@@ -12,6 +12,7 @@
     "debug_saml": "DEBUG=saml node example.js > /dev/null"
   },
   "dependencies": {
+    "browser-request": "^0.3.3",
     "date-fns": "^1.28.5",
     "debug": "^3.0.0",
     "fecha": "^2.3.1",
