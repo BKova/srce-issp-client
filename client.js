@@ -55,7 +55,7 @@ class Client {
   getReceiptDetails(receipt) {
     debug('client', 'Getting receipt %o', receipt.id);
     const url = urlJoin(this.baseUrl, '/StudentRacun/RacunDetalji');
-    const options = { url, body: JSON.stringify(receipt.id) };
+    const options = { url, body: JSON.stringify(receipt.id), headers: { 'content-type': 'application/json' } };
     debug('http', 'POST %s', url);
     return r.post(options)
       .then(([, html]) => Object.assign({}, receipt, { items: parseReceiptDetailsHtml(html) }));
