@@ -106,7 +106,5 @@ function parseUserInfo(data) {
 }
 
 function limitDate(receipts, dayLimit) {
-  return filter(receipts, receipt =>
-    isWithinRange(receipt.time, addDays(endOfToday(), -dayLimit), endOfToday()),
-  );
+  return filter(receipts, (receipt) => isWithinRange(receipt.time, addDays(endOfToday(), -dayLimit), endOfToday()));
 }
